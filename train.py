@@ -523,7 +523,9 @@ def train(hyp, opt, device, tb_writer=None):
     torch.cuda.empty_cache()
     return results
 
-
+#2023/12/04 add
+#https://yolov5.blog.csdn.net/article/details/124443059
+#--cfg
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', type=str, default='yolo7.pt', help='initial weights path')
