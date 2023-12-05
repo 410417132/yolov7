@@ -752,8 +752,23 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
         #2023/12/04 add
         #https://yolov5.blog.csdn.net/article/details/124443059
         #SE
+        #https://arxiv.org/pdf/1709.01507.pdf
+        #https://github.com/hujie-frank/SENet
         #CBAM
-
+        #https://arxiv.org/pdf/1807.06521.pdf
+        #ECA
+        #https://arxiv.org/abs/1910.03151
+        #https://github.com/BangguWu/ECANet
+        #SimAM
+        #http://proceedings.mlr.press/v139/yang21o/yang21o.pdf
+        #https://github.com/ZjjConan/SimAM
+        #NAM
+        #https://arxiv.org/pdf/2111.12419.pdf
+        #https://github.com/Christian-lyc/NAM
+        #GAM
+        #https://arxiv.org/pdf/2112.05561v1.pdf
+        #A2-Net
+        #https://arxiv.org/pdf/1810.11579.pdf
         if m in [nn.Conv2d, Conv, RobustConv, RobustConv2, DWConv, GhostConv, RepConv, RepConv_OREPA, DownC, 
                  SPP, SPPF, SPPCSPC, GhostSPPCSPC, MixConv2d, Focus, Stem, GhostStem, CrossConv, 
                  Bottleneck, BottleneckCSPA, BottleneckCSPB, BottleneckCSPC, 
@@ -764,7 +779,7 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
                  RepResX, RepResXCSPA, RepResXCSPB, RepResXCSPC, 
                  Ghost, GhostCSPA, GhostCSPB, GhostCSPC,
                  SwinTransformerBlock, STCSPA, STCSPB, STCSPC,
-                 SwinTransformer2Block, ST2CSPA, ST2CSPB, ST2CSPC, SE, CBAM]:
+                 SwinTransformer2Block, ST2CSPA, ST2CSPB, ST2CSPC, SE, CBAM, ECA]:
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
                 c2 = make_divisible(c2 * gw, 8)
@@ -802,6 +817,19 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
             c2 = ch[f] * args[0] ** 2
         elif m is Expand:
             c2 = ch[f] // args[0] ** 2
+        elif m in [SimAM]:
+            args = [*args[:]]
+        elif m in [NAMAttention]:  # channels  # CrissCrossAttention bug,
+            c1 = ch[f]
+            args = [c1]
+        elif m in [GAMAttention]:  # in_channels out_channels
+            c1, c2 = ch[f], args[0]
+            if c2 != no:
+                c2 = make_divisible(c2 * gw, 8)
+            args = [c1, c2, *args[1:]]
+        elif m in [DoubleAttention]:  # channels args #A2
+            c2 = ch[f]
+            args = [c2, *args[0:]]
         else:
             c2 = ch[f]
 
