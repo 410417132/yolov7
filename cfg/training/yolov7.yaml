@@ -75,6 +75,7 @@ backbone:
    #[-1, 1, SimAM, [1e-4]],      #SimAM
    #[-1, 1, NAMAttention, [1024]],  #NAM
    #[-1, 1, GAMAttention, [1024, True, 4]], #GAM
+   #[-1, 1, DoubleAttention, [128, 128, True]], #A2-Net
    [-1, 1, Conv, [1024, 1, 1]],  # 50
   ]
 
